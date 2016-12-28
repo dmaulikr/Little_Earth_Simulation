@@ -36,7 +36,7 @@ public class MainFrame extends JFrame {
         plant = new JLabel(icons[2]);
 
         // Text Area
-        JTextArea textArea = new JTextArea("\n Click \"next\" to begin your simulation...");
+        JTextArea textArea = new JTextArea("\n Click \"next\" to begin your simulation...\n\nLEGEND:\n\tPlants = \"*\"\n\tHerbivores = \"&\"\n\tCarnivores = \"@\"\n\tEmpty Space = \".\"");
         textArea.setColumns(25);
         textArea.setRows(22);
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
