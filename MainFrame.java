@@ -8,41 +8,56 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame {
     // ****************** Variables ***********************
-    private int i = -1; //counter for next button
-    private int n = 1; // value for radio button
-    private final GridBagLayout layout;
-    private final GridBagConstraints constraints;
-    private final JLabel carn, plant, herb, speedLabel;                     // display icons
-    private static final String[] names = {"carnivore1.gif", "herbivore.gif", "plant2.gif", "empty.gif"};
-    private final Icon[] icons = {
-            new ImageIcon(getClass().getResource(names[0])),
-            new ImageIcon(getClass().getResource(names[1])),
-            new ImageIcon(getClass().getResource(names[2])),
-            new ImageIcon(getClass().getResource(names[3]))};
+    public static String[] earthStrings;
+    private static int ITERATIONS;
+    private static int GRID_SIZE;
+    private int i_nextBtn = -1; //counter for next button
+    private int n_radioBtn = 1; // value for radio button
+    private final JLabel yearLabel, speedLabel;                     // display icons
+    private static final String[] names = {"carnivore.gif", "herbivore.gif", "plant.gif", "empty.gif"};
+    private final Icon carn = new ImageIcon(getClass().getResource(names[0]));
+    private final Icon herb = new ImageIcon(getClass().getResource(names[1]));
+    private final Icon plant = new ImageIcon(getClass().getResource(names[2]));
+    private final Icon empty = new ImageIcon(getClass().getResource(names[3]));
     private final JRadioButton radioBtn1, radioBtn2, radioBtn3, radioBtn4, radioBtn5, radioBtn10;
     private final ButtonGroup radioGroup;
+    private final static int imageSize = 50;
+    private final char CARNIVORE = '@';
+    private final char HERBIVORE = '&';
+    private final char PLANT = '*';
+    private final char EMPTY = '.';
+
     // ****************** CONSTRUCTOR ***********************
     public MainFrame(String title) {
         super(title);
 
-        // Set Layout Manager, layout, and constraints
-        layout = new GridBagLayout();
-        setLayout(layout);
-        constraints = new GridBagConstraints();
+        setLayout(new FlowLayout());
 
-        // Images
-        carn = new JLabel(icons[0]);
-        herb = new JLabel(icons[1]);
-        plant = new JLabel(icons[2]);
+        // Title Box
+        Box yearBox = Box.createHorizontalBox();
+        yearLabel = new JLabel("Current Cycle: #");
+        yearBox.add(yearLabel);
 
-        // Text Area
-        JTextArea textArea = new JTextArea("\n Click \"next\" to begin your simulation...\n\nLEGEND:\n\tPlants = \"*\"\n\tHerbivores = \"&\"\n\tCarnivores = \"@\"\n\tEmpty Space = \".\"");
-        textArea.setColumns(25);
-        textArea.setRows(22);
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        // BOX
+        Box[] box = new Box[GRID_SIZE];
+        for (int i=0; i < GRID_SIZE; i++){
+            box[i] = Box.createHorizontalBox();
+        }
+
+        // Image JLabels
+        JLabel[][] lab_grid = new JLabel[GRID_SIZE][GRID_SIZE];
+        for (int i=0; i < GRID_SIZE; i++){
+            for (int j=0; j < GRID_SIZE; j++){
+                lab_grid[i][j] = new JLabel(empty);
+                box[i].add(lab_grid[i][j]);
+            }
+        }
 
         // Label for radio buttons
         speedLabel = new JLabel("Please Select a Simulation Speed:");
+
+        Box box2 = Box.createHorizontalBox();
+        box2.add(speedLabel);
 
         // Radio Buttons
         radioBtn1 = new JRadioButton("1", true);
@@ -60,35 +75,32 @@ public class MainFrame extends JFrame {
         radioGroup.add(radioBtn5);
         radioGroup.add(radioBtn10);
 
+        Box box3 = Box.createHorizontalBox();
+        box3.add(radioBtn1);
+        box3.add(radioBtn2);
+        box3.add(radioBtn3);
+        box3.add(radioBtn4);
+        box3.add(radioBtn5);
+        box3.add(radioBtn10);
+
         // Regular Buttons
         JButton next_button = new JButton("next");
         JButton exit_button = new JButton("exit");
 
-        // Add Swing Components to Frame (w/ constraints)
-        constraints.insets = new Insets(20,20,10,20);
+        Box box4 = Box.createHorizontalBox();
+        box4.add(next_button);
+        box4.add(exit_button);
 
-        addComponent(carn);
-        constraints.gridwidth = GridBagConstraints.RELATIVE;
-        addComponent(plant);
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        addComponent(herb);
-        constraints.fill = GridBagConstraints.NONE;
+        // ***** Add Swing Components to Frame (w/ constraints) ******
+        add(yearBox);
+        for (int i=0; i < GRID_SIZE; i++){
+            add(box[i]);
+        }
 
-        constraints.insets = new Insets(20,20,10,20);
-        addComponent(textArea);
+        add(box2);
+        add(box3);
+        add(box4);
 
-        addComponent(speedLabel);
-
-        addComponent(radioBtn1,22,0,3,1,1,1);
-        addComponent(radioBtn2,22,4,3,1,1,1);
-        addComponent(radioBtn3,22,8,3,1,1,1);
-        addComponent(radioBtn4,22,12,3,1,1,1);
-        addComponent(radioBtn5,22,16,3,1,1,1);
-        addComponent(radioBtn10,22,20,3,1,1,1);
-
-        constraints.fill = GridBagConstraints.NONE;
-        addComponent(next_button,23,10,4,2,1,1);
-        addComponent(exit_button,23,17,4,2,1,1);
 
         //
         // ******** Action Listeners ********
@@ -108,16 +120,33 @@ public class MainFrame extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        i += n;
-                        if(i < Grid.ITERATIONS) {
-                            textArea.setText(Grid.earthStrings[i]);
+                        i_nextBtn += n_radioBtn;
+
+                        if(i_nextBtn < ITERATIONS) {
+                            yearLabel.setText("Current Cycle: " + (i_nextBtn+1));
+                            // Loop through that year's iteration and activate appropriate image for animal
+                            // located on that grid cell
+                            for (int m = 0; m < (GRID_SIZE*GRID_SIZE); m++){
+                                if (earthStrings[i_nextBtn].charAt(m) == EMPTY) {
+                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(empty);
+                                }
+                                else if (earthStrings[i_nextBtn].charAt(m) == CARNIVORE) {
+                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(carn);
+                                }
+                                else if (earthStrings[i_nextBtn].charAt(m) == HERBIVORE) {
+                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(herb);
+                                }
+                                else if (earthStrings[i_nextBtn].charAt(m) == PLANT) {
+                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(plant);
+                                }
+                            }
                         }
-                        else if(i >= Grid.ITERATIONS){
+                        else if(i_nextBtn >= ITERATIONS){
                             JOptionPane.showMessageDialog(null,"Simulation has ended.\nA new simulation will begin now");
                             dispose();
                             MainFrame myGUI = new MainFrame("A Land Before Time");
                             myGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                            myGUI.setSize(700,700);
+                            myGUI.setSize((imageSize*GRID_SIZE)+30,(imageSize*GRID_SIZE)+175);
                             myGUI.setVisible(true);
                         }
                     }
@@ -137,27 +166,23 @@ public class MainFrame extends JFrame {
 
         @Override
         public void itemStateChanged(ItemEvent e) {
-            n = k;
+            n_radioBtn = k;
         }
     }
 
-    // ************ HELPER FUNCTIONS ***********************
 
-    // Helper Functions for Adding Components
-    private void addComponent(Component component, int row, int column, int width, int height, int weightx, int weighty){
-        constraints.gridx = column;
-        constraints.gridy = row;
-        constraints.gridwidth = width;
-        constraints.gridheight = height;
-        constraints.weightx = weightx;
-        constraints.weighty = weighty;
-        layout.setConstraints(component, constraints);
-        add(component);
+    // ************************ MAIN FUNCTION ****************************
+    public static void main(String [] args){
+        ITERATIONS = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Simulation Length","100"));
+        GRID_SIZE = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Simulation Grid Size","15"));
+
+        Grid earth = new Grid(GRID_SIZE, ITERATIONS);
+        earth.initializeWorld();
+        earthStrings = earth.startSimulation();
+
+        MainFrame mainframe = new MainFrame("A Land Before Time");
+        mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainframe.setSize((imageSize*GRID_SIZE)+30,(imageSize*GRID_SIZE)+175);
+        mainframe.setVisible(true);
     }
-
-    private void addComponent(Component component){
-        layout.setConstraints(component, constraints);
-        add(component);
-    }
-
 }

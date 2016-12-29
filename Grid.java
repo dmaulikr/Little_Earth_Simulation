@@ -17,15 +17,18 @@ public class Grid {
     // ******************** VARIABLES ***********************
     private int gridSize;   // used to create NxN 2-dimensional array
     private int simulationLength;
-    public static int ITERATIONS = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Simulation Length","50"));
+    //public static int ITERATIONS = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Simulation Length","50"));
     private int initNumOfPlants;
     private int initNumOfHerbs;
     private int initNumOfCarns;
     private GridCells[][] gridCells = new GridCells[gridSize][gridSize];    // create 2D array w/ 4 data nodes in each cell.
     private static Life[] agents = new Life[1000];
     public int agentCount = 0;
-    public static String[] earthStrings;
-
+    private String[] earthStrings;
+    private final String CARNIVORE = "@";
+    private final String HERBIVORE = "&";
+    private final String PLANT = "*";
+    private final String EMPTY = ".";
     // ******************** CONSTRUCTOR ***********************
     public Grid(int gridSize, int simulationLength){
         this.simulationLength = simulationLength;
@@ -44,16 +47,16 @@ public class Grid {
     }
 
     // ******************** METHODS ***********************
-    public static void main(String [] args){
-        Grid earth = new Grid(15,ITERATIONS);
-        earth.initializeWorld();
-        earthStrings = earth.startSimulation();
-
-        MainFrame mainframe = new MainFrame("A Land Before Time");
-        mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainframe.setSize(700,700);
-        mainframe.setVisible(true);
-    }
+//    public static void main(String [] args){
+//        Grid earth = new Grid(15,ITERATIONS);
+//        earth.initializeWorld();
+//        earthStrings = earth.startSimulation();
+//
+//        MainFrame mainframe = new MainFrame("A Land Before Time");
+//        mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        mainframe.setSize(700,700);
+//        mainframe.setVisible(true);
+//    }
 
     public void initializeWorld(){
         int i=0;
@@ -74,9 +77,9 @@ public class Grid {
         int j = 0;
         String[] earthStrings = new String[getSimulationLength()];
         // Print the initialized gridCells
-        earthStrings[j] = "\nYear " + (j+1);
-        earthStrings[j++] += printWorld();
+        earthStrings[j++] = printWorld();
         decrementSimLength();
+        printConsoleWorld();                            //########## LOG OUTPUT #############
         // Run simulation for desired length
         while(getSimulationLength() > 0){
             for (int i = 0; i < agents.length && agents[i] != null; i++) {
@@ -91,8 +94,8 @@ public class Grid {
                 agents[agentCount++] = new Plant(this);
             }
             decrementSimLength();
-            earthStrings[j] = "\nYear " + (j+1);
-            earthStrings[j++] += printWorld();
+            earthStrings[j++] = printWorld();
+            printConsoleWorld();                        //########## LOG OUTPUT #############
         }
         return earthStrings;
     }
@@ -228,23 +231,21 @@ public class Grid {
     public String printWorld(){
         String earthString = "";
         for (int i=0; i < this.gridSize; i++){       // cycles through rows
-            earthString += "\n";
             for (int j=0; j < this.gridSize; j++){   // cycles through columns
                 if (gridCells[i][j].isEmpty()){
-                    earthString += " . ";
+                    earthString += EMPTY;
                 }
                 else if (gridCells[i][j].isCarnivore()){
-                    earthString += " @ ";
+                    earthString += CARNIVORE;
                 }
                 else if (gridCells[i][j].isHerbivore()){
-                    earthString += " & ";
+                    earthString += HERBIVORE;
                 }
                 else if (gridCells[i][j].isPlant()){
-                    earthString += " * ";
+                    earthString += PLANT;
                 }
             }
         }
-        earthString += "\n";
         return earthString;
     }
 

@@ -19,8 +19,8 @@ public class Plant extends Life{
             y = ThreadLocalRandom.current().nextInt(0, world.getGridSize());
             counter++;
         } while(world.isPlant(x,y) && counter < world.getGridSize() * world.getGridSize());
-        if (counter >= world.getGridSize()*world.getGridSize()){
-            System.out.println("ERROR: CANNOT FIND SPACE TO PLACE PLANT (Surrounded on all sides), EXITING PROGRAM...");
+        if (counter >= world.getGridSize()*world.getGridSize()*2){
+            System.out.println("ERROR: CANNOT FIND SPACE TO PLACE PLANT, EXITING PROGRAM...");
             System.exit(-1);
         }
         this.location[0] = x;
