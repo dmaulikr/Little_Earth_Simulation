@@ -2,7 +2,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Carnivore extends Animal {
     // ********************  VARIABLES  *************************
-    static int speed = 1;
+    static int speed = 2;
     private Life[] agents = Grid.getLifePointer();
 
     // ********************  CONSTRUCTOR  ***********************

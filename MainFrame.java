@@ -1,3 +1,5 @@
+import jdk.nashorn.internal.scripts.JO;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,6 +21,7 @@ public class MainFrame extends JFrame {
     private final Icon herb = new ImageIcon(getClass().getResource(names[1]));
     private final Icon plant = new ImageIcon(getClass().getResource(names[2]));
     private final Icon empty = new ImageIcon(getClass().getResource(names[3]));
+    private final JLabel[][] lab_grid;
     private final JRadioButton radioBtn1, radioBtn2, radioBtn3, radioBtn4, radioBtn5, radioBtn10;
     private final ButtonGroup radioGroup;
     private final static int imageSize = 50;
@@ -31,21 +34,22 @@ public class MainFrame extends JFrame {
     public MainFrame(String title) {
         super(title);
 
-        setLayout(new FlowLayout());
+        setLayout(new FlowLayout(FlowLayout.CENTER,25,15));
 
-        // Title Box
-        Box yearBox = Box.createHorizontalBox();
+        // Current Cycle LABEL
         yearLabel = new JLabel("Current Cycle: #");
-        yearBox.add(yearLabel);
-
-        // BOX
+        
+        // Grid Row Boxes
         Box[] box = new Box[GRID_SIZE];
         for (int i=0; i < GRID_SIZE; i++){
             box[i] = Box.createHorizontalBox();
         }
 
-        // Image JLabels
-        JLabel[][] lab_grid = new JLabel[GRID_SIZE][GRID_SIZE];
+        // Vertical Box to hold Grid Rows
+        Box gridRowsBox = Box.createVerticalBox();
+
+        // Animal Icon JLabels 
+        lab_grid = new JLabel[GRID_SIZE][GRID_SIZE];
         for (int i=0; i < GRID_SIZE; i++){
             for (int j=0; j < GRID_SIZE; j++){
                 lab_grid[i][j] = new JLabel(empty);
@@ -53,11 +57,13 @@ public class MainFrame extends JFrame {
             }
         }
 
+        // Add Grid Rows to One Vertically stacked box
+        for (int i=0; i < GRID_SIZE; i++){
+            gridRowsBox.add(box[i]);
+        }
+
         // Label for radio buttons
         speedLabel = new JLabel("Please Select a Simulation Speed:");
-
-        Box box2 = Box.createHorizontalBox();
-        box2.add(speedLabel);
 
         // Radio Buttons
         radioBtn1 = new JRadioButton("1", true);
@@ -75,36 +81,44 @@ public class MainFrame extends JFrame {
         radioGroup.add(radioBtn5);
         radioGroup.add(radioBtn10);
 
-        Box box3 = Box.createHorizontalBox();
-        box3.add(radioBtn1);
-        box3.add(radioBtn2);
-        box3.add(radioBtn3);
-        box3.add(radioBtn4);
-        box3.add(radioBtn5);
-        box3.add(radioBtn10);
+        Box radioBox = Box.createHorizontalBox();
+        radioBox.add(radioBtn1);
+        radioBox.add(radioBtn2);
+        radioBox.add(radioBtn3);
+        radioBox.add(radioBtn4);
+        radioBox.add(radioBtn5);
+        radioBox.add(radioBtn10);
 
         // Regular Buttons
-        JButton next_button = new JButton("next");
-        JButton exit_button = new JButton("exit");
+        JButton prev_button = new JButton("<- prev");
+        JButton next_button = new JButton("next ->");
+        JButton exit_button = new JButton("EXIT");
 
-        Box box4 = Box.createHorizontalBox();
-        box4.add(next_button);
-        box4.add(exit_button);
+        // Put Buttons in Box
+        Box buttonsBox = Box.createHorizontalBox();
 
-        // ***** Add Swing Components to Frame (w/ constraints) ******
-        add(yearBox);
-        for (int i=0; i < GRID_SIZE; i++){
-            add(box[i]);
-        }
+        buttonsBox.add(prev_button);
+        buttonsBox.add(Box.createRigidArea(new Dimension(15,5)));
+        buttonsBox.add(next_button);
+        buttonsBox.add(Box.createRigidArea(new Dimension(15,5)));
 
-        add(box2);
-        add(box3);
-        add(box4);
+        // Exit Button BOX
+        Box exitBox = Box.createHorizontalBox();
+        exitBox.add(exit_button);
+
+        // ***** Add Swing Components to Frame  ******
+        add(yearLabel);
+        add(gridRowsBox);
+        add(speedLabel);
+        add(radioBox);
+        add(buttonsBox);
+        add(exitBox);
 
 
-        //
+        //***********************************
         // ******** Action Listeners ********
-        //
+        //***********************************
+
         // Radio Buttons behavior
         radioBtn1.addItemListener(new RadioButtonHandler(1));
         radioBtn2.addItemListener(new RadioButtonHandler(2));
@@ -113,8 +127,30 @@ public class MainFrame extends JFrame {
         radioBtn5.addItemListener(new RadioButtonHandler(5));
         radioBtn10.addItemListener(new RadioButtonHandler(10));
 
+        // "PREV" button behavior
+        prev_button.addActionListener(
+
+                new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        i_nextBtn -= n_radioBtn;
+                        if(i_nextBtn < 0) {
+                            JOptionPane.showMessageDialog(null,"You are at the 1st Cycle.\n\nThe last cycle will now be displayed.");
+                            i_nextBtn = (ITERATIONS-1);
+                            drawEarth();
+                        }
+                        else if(i_nextBtn < ITERATIONS) {
+                            drawEarth();
+                        }
+                    }
+                }
+        );
+
         // "NEXT" button behavior
         next_button.addActionListener(
+
                 new ActionListener()
                 {
                     @Override
@@ -123,31 +159,12 @@ public class MainFrame extends JFrame {
                         i_nextBtn += n_radioBtn;
 
                         if(i_nextBtn < ITERATIONS) {
-                            yearLabel.setText("Current Cycle: " + (i_nextBtn+1));
-                            // Loop through that year's iteration and activate appropriate image for animal
-                            // located on that grid cell
-                            for (int m = 0; m < (GRID_SIZE*GRID_SIZE); m++){
-                                if (earthStrings[i_nextBtn].charAt(m) == EMPTY) {
-                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(empty);
-                                }
-                                else if (earthStrings[i_nextBtn].charAt(m) == CARNIVORE) {
-                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(carn);
-                                }
-                                else if (earthStrings[i_nextBtn].charAt(m) == HERBIVORE) {
-                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(herb);
-                                }
-                                else if (earthStrings[i_nextBtn].charAt(m) == PLANT) {
-                                    lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(plant);
-                                }
-                            }
+                            drawEarth();
                         }
                         else if(i_nextBtn >= ITERATIONS){
-                            JOptionPane.showMessageDialog(null,"Simulation has ended.\nA new simulation will begin now");
-                            dispose();
-                            MainFrame myGUI = new MainFrame("A Land Before Time");
-                            myGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                            myGUI.setSize((imageSize*GRID_SIZE)+30,(imageSize*GRID_SIZE)+175);
-                            myGUI.setVisible(true);
+                            JOptionPane.showMessageDialog(null,"You are at the last Cycle.\n\nThe 1st cycle will now be displayed.");
+                            i_nextBtn = 0;
+                            drawEarth();
                         }
                     }
                 }
@@ -170,6 +187,26 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private void drawEarth(){
+        yearLabel.setText("Current Cycle: " + (i_nextBtn+1));
+        // Loop through that year's iteration and activate appropriate image for animal
+        // located on that grid cell
+        for (int m = 0; m < (GRID_SIZE*GRID_SIZE); m++){
+            if (earthStrings[i_nextBtn].charAt(m) == EMPTY) {
+                lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(empty);
+            }
+            else if (earthStrings[i_nextBtn].charAt(m) == CARNIVORE) {
+                lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(carn);
+            }
+            else if (earthStrings[i_nextBtn].charAt(m) == HERBIVORE) {
+                lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(herb);
+            }
+            else if (earthStrings[i_nextBtn].charAt(m) == PLANT) {
+                lab_grid[m/GRID_SIZE][m%GRID_SIZE].setIcon(plant);
+            }
+        }
+    }
+
 
     // ************************ MAIN FUNCTION ****************************
     public static void main(String [] args){
@@ -182,7 +219,7 @@ public class MainFrame extends JFrame {
 
         MainFrame mainframe = new MainFrame("A Land Before Time");
         mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainframe.setSize((imageSize*GRID_SIZE)+30,(imageSize*GRID_SIZE)+175);
+        mainframe.setSize((imageSize*GRID_SIZE)+30,(imageSize*GRID_SIZE)+235);
         mainframe.setVisible(true);
     }
 }

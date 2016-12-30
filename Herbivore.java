@@ -3,14 +3,14 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Herbivore extends Animal {
     // ********************  VARIABLES  *************************
 
-    static int speed = 2;
+    static int speed = 3;
     private Life[] agents = Grid.getLifePointer();
 
     // ********************  CONSTRUCTOR  ***********************
 
     // Constructor for initial random setup
     public Herbivore(Grid world){
-        super(3,2,4,5,8);
+        super(3,2,4,5,12);
         // Generate random location to put Herbivore until we find a location that isn't occupied
         int x,y;
         int counter = 0;

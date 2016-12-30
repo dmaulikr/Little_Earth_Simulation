@@ -3,7 +3,7 @@ import java.util.concurrent.ThreadLocalRandom;      // recommended to use over r
 public class Plant extends Life{
     // ********************  VARIABLES  *************************
     private boolean eaten;
-    public static int plantGrowthRate = 2;
+    public static int plantGrowthRate = 1;
 
     // ********************  CONSTRUCTOR  ***********************
     public Plant(Grid world){

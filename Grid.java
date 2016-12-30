@@ -34,8 +34,8 @@ public class Grid {
         this.simulationLength = simulationLength;
         this.gridSize = gridSize;
         initNumOfPlants = toIntExact(Math.round((gridSize*gridSize*0.75)));
-        initNumOfHerbs = gridSize*3;
-        initNumOfCarns = gridSize;
+        initNumOfHerbs = gridSize;
+        initNumOfCarns = (initNumOfHerbs/3);
         gridCells = new GridCells[gridSize][gridSize];
 
         // Initialize all the cells to be gridCells objects
@@ -79,7 +79,7 @@ public class Grid {
         // Print the initialized gridCells
         earthStrings[j++] = printWorld();
         decrementSimLength();
-        printConsoleWorld();                            //########## LOG OUTPUT #############
+        //printConsoleWorld();                            //########## LOG OUTPUT #############
         // Run simulation for desired length
         while(getSimulationLength() > 0){
             for (int i = 0; i < agents.length && agents[i] != null; i++) {
@@ -95,7 +95,7 @@ public class Grid {
             }
             decrementSimLength();
             earthStrings[j++] = printWorld();
-            printConsoleWorld();                        //########## LOG OUTPUT #############
+            //printConsoleWorld();                        //########## LOG OUTPUT #############
         }
         return earthStrings;
     }
