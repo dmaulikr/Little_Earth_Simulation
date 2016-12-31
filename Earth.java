@@ -1,5 +1,5 @@
 // #####################################################################################################
-// Small GridCells Simulator by Mike Garcia
+// Small EarthHelper Simulator by Mike Garcia
 //
 // NOTES:   The gridCells does not cut off at the edges, it wraps around.
 // NOTES:   Animals can see/move/eat in all directions (8 available moves).
@@ -10,10 +10,9 @@
 // NOTES:   You can toggle detailed output if you search "LOG OUTPUT" and (un)comment system.out statements.
 // #####################################################################################################
 
-import javax.swing.*;
 import static java.lang.Math.toIntExact;
 
-public class Grid {
+public class Earth {
     // ******************** VARIABLES ***********************
     private int gridSize;   // used to create NxN 2-dimensional array
     private int simulationLength;
@@ -21,7 +20,7 @@ public class Grid {
     private int initNumOfPlants;
     private int initNumOfHerbs;
     private int initNumOfCarns;
-    private GridCells[][] gridCells = new GridCells[gridSize][gridSize];    // create 2D array w/ 4 data nodes in each cell.
+    private EarthHelper[][] gridCells = new EarthHelper[gridSize][gridSize];    // create 2D array w/ 4 data nodes in each cell.
     private static Life[] agents = new Life[1000];
     public int agentCount = 0;
     private String[] earthStrings;
@@ -30,29 +29,29 @@ public class Grid {
     private final String PLANT = "*";
     private final String EMPTY = ".";
     // ******************** CONSTRUCTOR ***********************
-    public Grid(int gridSize, int simulationLength){
+    public Earth(int gridSize, int simulationLength){
         this.simulationLength = simulationLength;
         this.gridSize = gridSize;
         initNumOfPlants = toIntExact(Math.round((gridSize*gridSize*0.75)));
         initNumOfHerbs = gridSize;
         initNumOfCarns = (initNumOfHerbs/3);
-        gridCells = new GridCells[gridSize][gridSize];
+        gridCells = new EarthHelper[gridSize][gridSize];
 
         // Initialize all the cells to be gridCells objects
         for (int i=0; i < gridSize; i++) {       // cycles through rows
             for (int j = 0; j < gridSize; j++) {   // cycles through columns
-                gridCells[i][j] = new GridCells();
+                gridCells[i][j] = new EarthHelper();
             }
         }
     }
 
     // ******************** METHODS ***********************
 //    public static void main(String [] args){
-//        Grid earth = new Grid(15,ITERATIONS);
+//        Earth earth = new Earth(15,ITERATIONS);
 //        earth.initializeWorld();
 //        earthStrings = earth.startSimulation();
 //
-//        MainFrame mainframe = new MainFrame("A Land Before Time");
+//        MainProgram mainframe = new MainProgram("A Land Before Time");
 //        mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        mainframe.setSize(700,700);
 //        mainframe.setVisible(true);
@@ -181,7 +180,7 @@ public class Grid {
         gridCells[location[0]][location[1]].getPlant().setEaten(true);
         // Change plant's internal location to -1,-1
         gridCells[location[0]][location[1]].getPlant().setLocation(-1,-1);
-        // Update Grid location to reflect no plant either
+        // Update Earth location to reflect no plant either
         gridCells[location[0]][location[1]].setPlant(false);
     }
 
@@ -191,7 +190,7 @@ public class Grid {
         gridCells[location[0]][location[1]].getHerbivore().setEnergy(0);
         // Change Herb's location to -1,-1
         gridCells[location[0]][location[1]].getHerbivore().setLocation(-1,-1);
-        // Update Grid location to reflect no Herb present
+        // Update Earth location to reflect no Herb present
         gridCells[location[0]][location[1]].setHerbivore(false);
     }
 

@@ -1,5 +1,3 @@
-import jdk.nashorn.internal.scripts.JO;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -8,7 +6,7 @@ import java.awt.event.ItemListener;
 import javax.swing.*;
 
 
-public class MainFrame extends JFrame {
+public class MainProgram extends JFrame {
     // ****************** Variables ***********************
     public static String[] earthStrings;
     private static int ITERATIONS;
@@ -31,7 +29,7 @@ public class MainFrame extends JFrame {
     private final char EMPTY = '.';
 
     // ****************** CONSTRUCTOR ***********************
-    public MainFrame(String title) {
+    public MainProgram(String title) {
         super(title);
 
         setLayout(new FlowLayout(FlowLayout.CENTER,25,15));
@@ -39,13 +37,13 @@ public class MainFrame extends JFrame {
         // Current Cycle LABEL
         yearLabel = new JLabel("Current Cycle: #");
         
-        // Grid Row Boxes
+        // Earth Row Boxes
         Box[] box = new Box[GRID_SIZE];
         for (int i=0; i < GRID_SIZE; i++){
             box[i] = Box.createHorizontalBox();
         }
 
-        // Vertical Box to hold Grid Rows
+        // Vertical Box to hold Earth Rows
         Box gridRowsBox = Box.createVerticalBox();
 
         // Animal Icon JLabels 
@@ -57,7 +55,7 @@ public class MainFrame extends JFrame {
             }
         }
 
-        // Add Grid Rows to One Vertically stacked box
+        // Add Earth Rows to One Vertically stacked box
         for (int i=0; i < GRID_SIZE; i++){
             gridRowsBox.add(box[i]);
         }
@@ -211,13 +209,13 @@ public class MainFrame extends JFrame {
     // ************************ MAIN FUNCTION ****************************
     public static void main(String [] args){
         ITERATIONS = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Simulation Length","100"));
-        GRID_SIZE = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Simulation Grid Size","15"));
+        GRID_SIZE = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Simulation Earth Size","15"));
 
-        Grid earth = new Grid(GRID_SIZE, ITERATIONS);
+        Earth earth = new Earth(GRID_SIZE, ITERATIONS);
         earth.initializeWorld();
         earthStrings = earth.startSimulation();
 
-        MainFrame mainframe = new MainFrame("A Land Before Time");
+        MainProgram mainframe = new MainProgram("A Land Before Time");
         mainframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainframe.setSize((imageSize*GRID_SIZE)+30,(imageSize*GRID_SIZE)+235);
         mainframe.setVisible(true);

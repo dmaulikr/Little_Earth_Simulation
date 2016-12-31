@@ -1,3 +1,3 @@
 public interface Movable {
-    void act(Grid world);
+    void act(Earth world);
 }

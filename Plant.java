@@ -6,7 +6,7 @@ public class Plant extends Life{
     public static int plantGrowthRate = 1;
 
     // ********************  CONSTRUCTOR  ***********************
-    public Plant(Grid world){
+    public Plant(Earth world){
         // Generate random energy between 2 & 10 for new plants
         super(ThreadLocalRandom.current().nextInt(2, 11));
         this.eaten = false;

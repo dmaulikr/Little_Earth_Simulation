@@ -1,4 +1,4 @@
-public class GridCells {
+public class EarthHelper {
 
     // ******************** VARIABLES ***********************
     private boolean plant;
@@ -10,7 +10,7 @@ public class GridCells {
     private Herbivore herbPntr;
 
     // ******************** CONSTRUCTOR ***********************
-    public GridCells(){
+    public EarthHelper(){
         this.plant = false;
         this.carnivore = false;
         this.herbivore = false;
@@ -49,7 +49,7 @@ public class GridCells {
     public void setPlant(boolean isPlant){
         this.plant = isPlant;
         if(isPlant){
-            System.out.println("ERROR: NO Plant Pointer Passed into GridCells.setPlant() function.\nEXITING PROGRAM...");
+            System.out.println("ERROR: NO Plant Pointer Passed into EarthHelper.setPlant() function.\nEXITING PROGRAM...");
             System.exit(-1);
         }
         plantPntr = null;
@@ -68,7 +68,7 @@ public class GridCells {
     public void setCarnivore(boolean isCarnivore){
         this.carnivore = isCarnivore;
         if(isCarnivore){
-            System.out.println("ERROR: NO Carnivore Pointer Passed into GridCells.setCarnivore() function.\nEXITING PROGRAM...");
+            System.out.println("ERROR: NO Carnivore Pointer Passed into EarthHelper.setCarnivore() function.\nEXITING PROGRAM...");
             System.exit(-1);
         }
         carnPntr = null;
@@ -88,7 +88,7 @@ public class GridCells {
     public void setHerbivore(boolean isHerbivore){
         this.herbivore = isHerbivore;
         if (isHerbivore){
-            System.out.println("ERROR: NO Herbivore Pointer Passed into GridCells.setHerbivore() function.\nEXITING PROGRAM...");
+            System.out.println("ERROR: NO Herbivore Pointer Passed into EarthHelper.setHerbivore() function.\nEXITING PROGRAM...");
             System.exit(-1);
         }
         herbPntr = null;
@@ -108,6 +108,6 @@ public class GridCells {
 
     @Override
     public String toString(){
-        return "GridCells Info:\tPlant: " +plant+ "\tCarnivore: " +carnivore+ "\tHerbivore: " +herbivore+ " (" +herbPntr+")";
+        return "EarthHelper Info:\tPlant: " +plant+ "\tCarnivore: " +carnivore+ "\tHerbivore: " +herbivore+ " (" +herbPntr+")";
     }
 }

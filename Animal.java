@@ -43,7 +43,7 @@ public abstract class Animal extends Life implements Movable {
     }
 
     // ********************  METHODS  ***************************
-    public abstract void act(Grid world); // MUST DEFINE IN SUBCLASSES
+    public abstract void act(Earth world); // MUST DEFINE IN SUBCLASSES
 
     public int getAge(){
         return age;
@@ -74,7 +74,7 @@ public abstract class Animal extends Life implements Movable {
     // Used in tandem w/ each animals specific "move" function
     // where it will further analyze its surroundings and
     // decide where to move.
-    public int[][] getMoves(Grid world){
+    public int[][] getMoves(Earth world){
         int[][] possibleMoves = new int[8][2];
 
         // find all 8 coordinates available to move to

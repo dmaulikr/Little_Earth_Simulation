@@ -3,11 +3,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Carnivore extends Animal {
     // ********************  VARIABLES  *************************
     static int speed = 2;
-    private Life[] agents = Grid.getLifePointer();
+    private Life[] agents = Earth.getLifePointer();
 
     // ********************  CONSTRUCTOR  ***********************
     // Constructor for initial random setup
-    public Carnivore(Grid world){
+    public Carnivore(Earth world){
         super(3,2,4,5,8);
         // Generate random location to put Herbivore until we find a location that isn't occupied
         int x,y;
@@ -30,7 +30,7 @@ public class Carnivore extends Animal {
     }
 
     // Constructor for specifying birth location BUT w/ array location
-    public Carnivore(Grid world, int [] xy){
+    public Carnivore(Earth world, int [] xy){
         super(3, xy,2,4,5,8);
         location = xy;
 
@@ -39,7 +39,7 @@ public class Carnivore extends Animal {
     }
 
     // ********************  METHODS  ***************************
-    public int[] move(Grid world){
+    public int[] move(Earth world){
         // pick from that, those that aren't occupied by other Carnivores
         int[][] moves = getMoves(world);
         int choice;
@@ -81,7 +81,7 @@ public class Carnivore extends Animal {
     }
 
     @Override
-    public void act(Grid world){
+    public void act(Earth world){
         if (world.getSimulationLength() % speed == 0 && !isDead()) {
             --energy;   // costs 1 energy unit per turn
             ++age;      // animal ages each move
@@ -119,7 +119,7 @@ public class Carnivore extends Animal {
         }
     }
 
-    public void eat(Grid world, int[] location){
+    public void eat(Earth world, int[] location){
         // get energy from Herbivore at our location
         setEnergy(getEnergy() + world.getHerbivoreEnergy(location));
         // "erase" herbivore obj & turn it off on grid location
